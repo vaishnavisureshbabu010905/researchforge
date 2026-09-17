@@ -154,7 +154,7 @@ export default function ResearchWorkspacePage() {
             {isRunning && (
               <div className="card">
                 <p className="text-sm text-white/60">
-                  Research in progress — sources and claims will appear as they're collected. This page updates live.
+                  Research in progress — sources and claims will appear as they&apos;re collected. This page updates live.
                 </p>
               </div>
             )}
