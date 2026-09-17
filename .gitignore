@@ -35,3 +35,4 @@ frontend/.env.local
 
 # Logs
 *.log
+frontend/tsconfig.tsbuildinfo
