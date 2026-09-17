@@ -54,5 +54,7 @@ def get_llm_provider(settings: Settings) -> LLMProvider:
         return OllamaLLMProvider(base_url=settings.ollama_base_url)
 
     if settings.llm_provider != LLMProviderName.MOCK:
-        logger.warning("llm_provider_fallback_to_mock", configured=settings.llm_provider.value, reason="missing_api_key")
+        logger.warning(
+            "llm_provider_fallback_to_mock", configured=settings.llm_provider.value, reason="missing_api_key"
+        )
     return MockLLMProvider()

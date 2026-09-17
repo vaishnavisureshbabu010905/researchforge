@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import pytest
 
-from researchforge.observability.metrics import Timer
 from researchforge.orchestration.errors import RetryableProviderError
 from researchforge.orchestration.execution import run_tasks
 

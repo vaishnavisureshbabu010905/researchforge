@@ -8,8 +8,8 @@ properties; the logic lives in orchestration/ and agents/.
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
-from enum import Enum
+from datetime import UTC, datetime
+from enum import StrEnum
 
 from pydantic import BaseModel, Field
 
@@ -20,13 +20,13 @@ def _new_id(prefix: str) -> str:
     return f"{prefix}_{uuid.uuid4().hex[:12]}"
 
 
-class ResearchMode(str, Enum):
+class ResearchMode(StrEnum):
     QUICK = "quick"
     DEEP = "deep"
     EXHAUSTIVE = "exhaustive"
 
 
-class ResearchJobStatus(str, Enum):
+class ResearchJobStatus(StrEnum):
     PENDING = "pending"
     PLANNING = "planning"
     RESEARCHING = "researching"
@@ -39,7 +39,7 @@ class ResearchJobStatus(str, Enum):
     FAILED = "failed"
 
 
-class TaskStatus(str, Enum):
+class TaskStatus(StrEnum):
     PENDING = "pending"
     RUNNING = "running"
     COMPLETED = "completed"
@@ -72,7 +72,7 @@ class ResearchPlan(BaseModel):
     subquestions: list[str] = Field(default_factory=list)
     required_domains: list[ResearchDomain] = Field(default_factory=list)
     tasks: list[ResearchTask] = Field(default_factory=list)
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     iteration: int = 0
 
 
@@ -97,7 +97,7 @@ class ResearchEvent(BaseModel):
     event_type: str
     message: str
     data: dict = Field(default_factory=dict)
-    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
 
 class ResearchJob(BaseModel):
@@ -111,8 +111,8 @@ class ResearchJob(BaseModel):
     plan: ResearchPlan | None = None
     iteration_count: int = 0
 
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     completed_at: datetime | None = None
 
     error: str | None = None

@@ -8,14 +8,12 @@ no persistence responsibility (that's storage/).
 
 from __future__ import annotations
 
-from abc import ABC
-
 from researchforge.observability.logging import get_logger
 from researchforge.providers.base import SearchProvider
 from researchforge.providers.llm.base import LLMProvider
 
 
-class BaseAgent(ABC):
+class BaseAgent:
     """Common constructor + logger for all agents."""
 
     role: str = "base_agent"

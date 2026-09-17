@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from pydantic import BaseModel, Field
 
@@ -60,7 +60,7 @@ class ResearchReport(BaseModel):
     citation_validation: CitationValidation
     quality: QualityBreakdown
 
-    generated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    generated_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
     def to_markdown(self) -> str:
         """Render the report as Markdown. See citations/formatter.py for citation-list formatting."""

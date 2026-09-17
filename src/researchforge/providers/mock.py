@@ -8,7 +8,7 @@ Output is deterministic (seeded from the query string) so tests can assert on it
 from __future__ import annotations
 
 import hashlib
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from researchforge.providers.base import ScrapedPage, SearchProvider, SearchResultItem
 
@@ -50,7 +50,7 @@ class MockSearchProvider(SearchProvider):
                         f"This mock result exists so ResearchForge can run without a live "
                         f"search API key; see providers/mock.py."
                     ),
-                    published_at=datetime.now(timezone.utc) - timedelta(days=days_ago),
+                    published_at=datetime.now(UTC) - timedelta(days=days_ago),
                 )
             )
         return results
@@ -70,5 +70,5 @@ class MockSearchProvider(SearchProvider):
             url=url,
             title=title,
             content=content,
-            published_at=datetime.now(timezone.utc) - timedelta(days=seed % 400),
+            published_at=datetime.now(UTC) - timedelta(days=seed % 400),
         )

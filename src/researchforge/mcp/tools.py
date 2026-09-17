@@ -184,7 +184,9 @@ async def tool_verify_claim(claim_text: str, research_id: str | None = None) -> 
         if len({w.lower() for w in re.findall(r"[a-zA-Z]{4,}", f"{e.title} {e.summary}")} & claim_words) >= 2
         and e.evidence_id not in conflicting_ids
     ]
-    claim = claim.model_copy(update={"supporting_evidence_ids": supporting_ids, "conflicting_evidence_ids": conflicting_ids})
+    claim = claim.model_copy(
+        update={"supporting_evidence_ids": supporting_ids, "conflicting_evidence_ids": conflicting_ids}
+    )
     result = assess(claim, {e.evidence_id: e for e in evidence})
 
     return ClaimVerificationResult(

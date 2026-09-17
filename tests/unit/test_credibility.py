@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from researchforge.evidence.credibility import score_credibility
 from researchforge.models.evidence import Evidence
@@ -33,8 +33,8 @@ def test_primary_documentation_scores_higher_than_forum():
 
 
 def test_recency_improves_score():
-    old = _ev(publication_date=datetime.now(timezone.utc) - timedelta(days=3000))
-    recent = _ev(publication_date=datetime.now(timezone.utc) - timedelta(days=10))
+    old = _ev(publication_date=datetime.now(UTC) - timedelta(days=3000))
+    recent = _ev(publication_date=datetime.now(UTC) - timedelta(days=10))
 
     old_score = score_credibility(old)
     recent_score = score_credibility(recent)

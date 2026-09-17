@@ -22,7 +22,9 @@ async def test_health_endpoint_reports_mock_providers(lifespan_client):
 @pytest.mark.asyncio
 async def test_create_and_poll_research_job(lifespan_client):
     client = lifespan_client
-    create_resp = await client.post("/api/research", json={"query": "What is retrieval-augmented generation?", "mode": "quick"})
+    create_resp = await client.post(
+        "/api/research", json={"query": "What is retrieval-augmented generation?", "mode": "quick"}
+    )
     assert create_resp.status_code == 202
     research_id = create_resp.json()["research_id"]
 

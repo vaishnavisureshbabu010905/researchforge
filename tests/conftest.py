@@ -46,6 +46,7 @@ def mock_llm():
 async def lifespan_client():
     """HTTP client that exercises FastAPI startup/shutdown lifespan."""
     import httpx
+
     from researchforge.api.app import create_app
 
     app = create_app()

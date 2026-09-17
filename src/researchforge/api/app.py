@@ -30,7 +30,9 @@ class BodySizeLimitMiddleware(BaseHTTPMiddleware):
         if content_length and int(content_length) > settings.max_request_body_bytes:
             return JSONResponse(
                 status_code=413,
-                content=ErrorResponse(error="payload_too_large", detail="Request body exceeds the configured limit.").model_dump(),
+                content=ErrorResponse(
+                    error="payload_too_large", detail="Request body exceeds the configured limit."
+                ).model_dump(),
             )
         return await call_next(request)
 

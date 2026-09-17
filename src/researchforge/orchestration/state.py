@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import asyncio
 from dataclasses import dataclass, field
+from datetime import UTC
 
 from researchforge.models.claims import Claim
 from researchforge.models.evidence import Evidence
@@ -44,10 +45,10 @@ class ResearchState:
         return evt
 
     def set_status(self, status: ResearchJobStatus) -> None:
-        from datetime import datetime, timezone
+        from datetime import datetime
 
         self.job.status = status
-        self.job.updated_at = datetime.now(timezone.utc)
+        self.job.updated_at = datetime.now(UTC)
 
     @property
     def events(self) -> list[ResearchEvent]:

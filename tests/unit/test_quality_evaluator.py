@@ -4,8 +4,8 @@ from researchforge.evaluation.evaluator import evaluate
 from researchforge.models.claims import Claim, ClaimStatus
 from researchforge.models.evidence import CredibilityAssessment, Evidence
 from researchforge.models.reports import CitationValidation
-from researchforge.orchestration.modes import get_mode_config
 from researchforge.models.research import ResearchMode
+from researchforge.orchestration.modes import get_mode_config
 
 
 def _ev(domain: str, score: int = 80) -> Evidence:
@@ -23,7 +23,9 @@ def _ev(domain: str, score: int = 80) -> Evidence:
 def test_empty_research_scores_zero():
     mode_config = get_mode_config(ResearchMode.DEEP)
     citation = CitationValidation(total_citations=0, valid_citations=0, coverage_percent=100.0)
-    result = evaluate(claims=[], evidence=[], citation_validation=citation, subquestions=[], mode_config=mode_config, iteration=1)
+    result = evaluate(
+        claims=[], evidence=[], citation_validation=citation, subquestions=[], mode_config=mode_config, iteration=1
+    )
     assert result.overall == 0
     assert result.claim_support == 0
 
@@ -57,7 +59,9 @@ def test_well_supported_research_scores_highly():
 def test_low_quality_recommends_another_iteration_when_budget_remains():
     mode_config = get_mode_config(ResearchMode.DEEP)
     citation = CitationValidation(total_citations=0, valid_citations=0, coverage_percent=0.0)
-    result = evaluate(claims=[], evidence=[], citation_validation=citation, subquestions=["q1"], mode_config=mode_config, iteration=1)
+    result = evaluate(
+        claims=[], evidence=[], citation_validation=citation, subquestions=["q1"], mode_config=mode_config, iteration=1
+    )
     assert result.recommend_another_iteration is True
 
 

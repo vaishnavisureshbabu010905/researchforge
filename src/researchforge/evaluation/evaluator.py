@@ -7,6 +7,8 @@ ResearchForge itself offline against a labeled dataset (see evaluation/README.md
 
 from __future__ import annotations
 
+from datetime import UTC
+
 from researchforge.models.claims import Claim, ClaimStatus
 from researchforge.models.evidence import Evidence
 from researchforge.models.reports import CitationValidation, QualityBreakdown
@@ -68,15 +70,15 @@ def _completeness(claims: list[Claim], subquestions: list[str]) -> int:
 def _freshness(evidence: list[Evidence]) -> int:
     if not evidence:
         return 0
-    from datetime import datetime, timezone
+    from datetime import datetime
 
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     scores = []
     for e in evidence:
         if e.publication_date is None:
             scores.append(50)
             continue
-        age_days = (now - e.publication_date.replace(tzinfo=timezone.utc)).days
+        age_days = (now - e.publication_date.replace(tzinfo=UTC)).days
         scores.append(100 if age_days <= 365 else max(10, 100 - age_days // 20))
     return round(sum(scores) / len(scores))
 
@@ -97,7 +99,9 @@ def evaluate(
             source_quality=0,
             source_diversity=0,
             claim_support=0,
-            citation_coverage=0 if citation_validation.total_citations == 0 else round(citation_validation.coverage_percent),
+            citation_coverage=0
+            if citation_validation.total_citations == 0
+            else round(citation_validation.coverage_percent),
             contradiction_handling=0,
             completeness=0,
             freshness=0,

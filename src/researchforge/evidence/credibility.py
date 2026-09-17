@@ -7,7 +7,7 @@ exposing a bare, unexplained number.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from fnmatch import fnmatch
 
 from researchforge.config.settings import DOMAIN_REPUTATION
@@ -40,7 +40,7 @@ def _domain_tier(domain: str) -> int:
 def _recency_score(published_at: datetime | None) -> tuple[int, str]:
     if published_at is None:
         return 5, "no publication date available (partial recency credit)"
-    age_days = (datetime.now(timezone.utc) - published_at.replace(tzinfo=timezone.utc)).days
+    age_days = (datetime.now(UTC) - published_at.replace(tzinfo=UTC)).days
     if age_days < 0:
         age_days = 0
     if age_days <= 180:
@@ -83,9 +83,7 @@ def score_credibility(
 
     corroboration_score = min(20, corroborating_domain_count * 7)
     if corroborating_domain_count:
-        reasons.append(
-            f"corroborated by {corroborating_domain_count} independent domain(s) ({corroboration_score}/20)"
-        )
+        reasons.append(f"corroborated by {corroborating_domain_count} independent domain(s) ({corroboration_score}/20)")
     else:
         reasons.append("no independent corroboration found yet (0/20)")
 

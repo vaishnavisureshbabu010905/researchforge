@@ -8,12 +8,13 @@ failure, and the caller decides what to do with a partial batch.
 from __future__ import annotations
 
 import asyncio
+from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
-from typing import Awaitable, Callable, Generic, TypeVar
+from typing import Generic, TypeVar
 
 from researchforge.observability.logging import get_logger
-from researchforge.orchestration.errors import RetryableProviderError
 from researchforge.observability.metrics import Timer, registry
+from researchforge.orchestration.errors import RetryableProviderError
 
 logger = get_logger(__name__)
 
@@ -44,7 +45,7 @@ async def _run_with_retry(
                 result = await asyncio.wait_for(coro_factory(), timeout=timeout_seconds)
             registry.increment("research.task_success_total")
             return TaskOutcome(task_id=task_id, success=True, result=result, attempts=attempt)
-        except asyncio.TimeoutError:
+        except TimeoutError:
             last_error = f"timed out after {timeout_seconds}s"
         except RetryableProviderError as exc:
             last_error = f"{type(exc).__name__}: {exc}"
@@ -77,7 +78,11 @@ async def run_tasks(
     async def _bounded(task_id: str, factory: Callable[[], Awaitable[T]]) -> TaskOutcome[T]:
         async with semaphore:
             return await _run_with_retry(
-                task_id, factory, timeout_seconds=timeout_seconds, max_retries=max_retries, backoff_seconds=backoff_seconds
+                task_id,
+                factory,
+                timeout_seconds=timeout_seconds,
+                max_retries=max_retries,
+                backoff_seconds=backoff_seconds,
             )
 
     return await asyncio.gather(*(_bounded(tid, factory) for tid, factory in items))

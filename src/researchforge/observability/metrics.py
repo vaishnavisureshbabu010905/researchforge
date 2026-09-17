@@ -57,7 +57,7 @@ class Timer:
     labels: dict[str, str] = field(default_factory=dict)
     _start: float = 0.0
 
-    def __enter__(self) -> "Timer":
+    def __enter__(self) -> Timer:
         import time
 
         self._start = time.monotonic()

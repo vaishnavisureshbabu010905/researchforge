@@ -35,7 +35,10 @@ class SynthesizerAgent(BaseAgent):
         claims_block = "\n".join(f"- [{c.status.value}] {c.text}" for c in claims) or "(no claims extracted)"
         prompt = _SYNTHESIS_PROMPT.format(query=query, claims_block=claims_block)
         draft, usage = await self.llm.generate_structured(
-            prompt, model=self.model, output_model=SynthesisDraft, system="Write clearly, cite nothing you cannot support."
+            prompt,
+            model=self.model,
+            output_model=SynthesisDraft,
+            system="Write clearly, cite nothing you cannot support.",
         )
         self.logger.info("synthesis_completed", tokens=usage.output_tokens, claim_count=len(claims))
         return draft
@@ -63,7 +66,15 @@ class SynthesizerAgent(BaseAgent):
             return "No claims were extracted, so confidence in this report is low."
         supported_ratio = sum(1 for c in claims if c.status == ClaimStatus.SUPPORTED) / len(claims)
         if supported_ratio >= 0.7:
-            return f"High confidence: {supported_ratio:.0%} of extracted claims are well-supported by independent evidence."
+            return (
+                f"High confidence: {supported_ratio:.0%} of extracted claims are "
+                "well-supported by independent evidence."
+            )
         if supported_ratio >= 0.4:
-            return f"Moderate confidence: {supported_ratio:.0%} of claims are well-supported; treat remaining claims cautiously."
-        return f"Low confidence: only {supported_ratio:.0%} of claims are well-supported. Treat findings as preliminary."
+            return (
+                f"Moderate confidence: {supported_ratio:.0%} of claims are well-supported; "
+                "treat remaining claims cautiously."
+            )
+        return (
+            f"Low confidence: only {supported_ratio:.0%} of claims are well-supported. Treat findings as preliminary."
+        )

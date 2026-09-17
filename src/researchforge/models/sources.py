@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-from enum import Enum
+from enum import StrEnum
 
 
-class SourceType(str, Enum):
+class SourceType(StrEnum):
     """What kind of thing a piece of evidence came from.
 
     Used by the credibility scorer (see evidence/credibility.py) as its primary
@@ -22,7 +22,7 @@ class SourceType(str, Enum):
     UNKNOWN = "unknown"
 
 
-class ResearchDomain(str, Enum):
+class ResearchDomain(StrEnum):
     """Which specialized agent a research task/source belongs to."""
 
     WEB = "web"

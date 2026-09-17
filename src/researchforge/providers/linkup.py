@@ -43,7 +43,7 @@ class LinkUpSearchProvider(SearchProvider):
             items.append(
                 SearchResultItem(
                     title=getattr(raw, "name", "") or getattr(raw, "title", "Untitled"),
-                    url=getattr(raw, "url"),
+                    url=raw.url,
                     snippet=getattr(raw, "content", "") or getattr(raw, "snippet", ""),
                     published_at=_safe_date(getattr(raw, "published_at", None)),
                 )
@@ -53,9 +53,7 @@ class LinkUpSearchProvider(SearchProvider):
     async def scrape(self, url: str) -> ScrapedPage:
         import asyncio
 
-        response = await asyncio.to_thread(
-            self._client.search, query=url, depth="deep", output_type="searchResults"
-        )
+        response = await asyncio.to_thread(self._client.search, query=url, depth="deep", output_type="searchResults")
         results = getattr(response, "results", [])
         content = results[0].content if results and hasattr(results[0], "content") else ""
         title = results[0].name if results and hasattr(results[0], "name") else url

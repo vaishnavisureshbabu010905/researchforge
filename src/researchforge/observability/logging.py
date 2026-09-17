@@ -10,7 +10,7 @@ from __future__ import annotations
 import json
 import logging
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 _REDACT_KEYS = {"api_key", "authorization", "token", "secret", "password"}
@@ -19,7 +19,7 @@ _REDACT_KEYS = {"api_key", "authorization", "token", "secret", "password"}
 class _JSONFormatter(logging.Formatter):
     def format(self, record: logging.LogRecord) -> str:
         payload: dict[str, Any] = {
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "level": record.levelname,
             "logger": record.name,
             "event": record.getMessage(),
@@ -33,10 +33,7 @@ class _JSONFormatter(logging.Formatter):
 
 
 def _redact(fields: dict[str, Any]) -> dict[str, Any]:
-    return {
-        k: ("***REDACTED***" if any(s in k.lower() for s in _REDACT_KEYS) else v)
-        for k, v in fields.items()
-    }
+    return {k: ("***REDACTED***" if any(s in k.lower() for s in _REDACT_KEYS) else v) for k, v in fields.items()}
 
 
 class _StructuredLogger:

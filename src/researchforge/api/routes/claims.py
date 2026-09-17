@@ -19,8 +19,8 @@ from researchforge.observability.logging import get_logger
 from researchforge.providers.factory import get_search_provider
 from researchforge.storage.database import Database, get_database
 from researchforge.storage.repositories import ResearchJobRepository
-from researchforge.verification.conflicts import find_conflicts
 from researchforge.verification.confidence import assess
+from researchforge.verification.conflicts import find_conflicts
 
 logger = get_logger(__name__)
 router = APIRouter(prefix="/api/claims", tags=["claims"])
@@ -47,9 +47,7 @@ async def verify_claim(
         # Ad-hoc verification: run a small fresh search scoped to the claim text.
         search = get_search_provider(settings)
         results = await search.search(body.claim_text, limit=5)
-        raw_evidence = [
-            normalize(result=r, page=None, research_task_id="ad_hoc", relevance_score=0.8) for r in results
-        ]
+        raw_evidence = [normalize(result=r, page=None, research_task_id="ad_hoc", relevance_score=0.8) for r in results]
         evidence = build_collection(raw_evidence).items
 
     claim = Claim(text=body.claim_text, research_task_id=None)
@@ -65,7 +63,9 @@ async def verify_claim(
         if len(claim_words & ev_words) >= 2 and e.evidence_id not in conflicting_ids:
             supporting_ids.append(e.evidence_id)
 
-    claim = claim.model_copy(update={"supporting_evidence_ids": supporting_ids, "conflicting_evidence_ids": conflicting_ids})
+    claim = claim.model_copy(
+        update={"supporting_evidence_ids": supporting_ids, "conflicting_evidence_ids": conflicting_ids}
+    )
     evidence_by_id = {e.evidence_id: e for e in evidence}
     result = assess(claim, evidence_by_id)
 

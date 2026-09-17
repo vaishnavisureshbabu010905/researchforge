@@ -156,7 +156,9 @@ async def stream_events(
                 if not any(e.event_type == event_type for e in persisted_events):
                     yield _sse(
                         event_type,
-                        json.dumps({"research_id": research_id, "status": job.status.value, "message": "terminal status"}),
+                        json.dumps(
+                            {"research_id": research_id, "status": job.status.value, "message": "terminal status"}
+                        ),
                     )
             return
 
@@ -171,14 +173,20 @@ async def stream_events(
                     yield _sse(event.event_type, event.model_dump_json())
                     if event.event_type in terminal.values():
                         break
-                except asyncio.TimeoutError:
+                except TimeoutError:
                     yield _sse("keepalive", "{}")
                     current = await registry.get_job(research_id)
                     if current is not None and current.status.value in terminal:
                         event_type = terminal[current.status.value]
                         yield _sse(
                             event_type,
-                            json.dumps({"research_id": research_id, "status": current.status.value, "message": "terminal status"}),
+                            json.dumps(
+                                {
+                                    "research_id": research_id,
+                                    "status": current.status.value,
+                                    "message": "terminal status",
+                                }
+                            ),
                         )
                         break
         finally:

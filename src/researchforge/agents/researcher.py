@@ -29,9 +29,7 @@ class ResearcherAgent(BaseAgent):
             return []
 
         to_scrape = results[: self.scrape_top_n]
-        pages = await asyncio.gather(
-            *(self.search.scrape(str(r.url)) for r in to_scrape), return_exceptions=True
-        )
+        pages = await asyncio.gather(*(self.search.scrape(str(r.url)) for r in to_scrape), return_exceptions=True)
 
         evidence: list[Evidence] = []
         for i, result in enumerate(results):

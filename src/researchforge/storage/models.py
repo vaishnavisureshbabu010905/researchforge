@@ -8,7 +8,7 @@ layer that uses the Pydantic models (CLAUDE.md: typed contracts, one job per fil
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from sqlalchemy import JSON, DateTime, Float, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
@@ -19,7 +19,7 @@ class Base(DeclarativeBase):
 
 
 def _utcnow() -> datetime:
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
 class ResearchJobRecord(Base):
@@ -38,10 +38,12 @@ class ResearchJobRecord(Base):
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow, onupdate=_utcnow)
     completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
-    evidence: Mapped[list["EvidenceRecord"]] = relationship(back_populates="job", cascade="all, delete-orphan")
-    claims: Mapped[list["ClaimRecord"]] = relationship(back_populates="job", cascade="all, delete-orphan")
-    events: Mapped[list["ResearchEventRecord"]] = relationship(back_populates="job", cascade="all, delete-orphan")
-    report: Mapped["ReportRecord | None"] = relationship(back_populates="job", uselist=False, cascade="all, delete-orphan")
+    evidence: Mapped[list[EvidenceRecord]] = relationship(back_populates="job", cascade="all, delete-orphan")
+    claims: Mapped[list[ClaimRecord]] = relationship(back_populates="job", cascade="all, delete-orphan")
+    events: Mapped[list[ResearchEventRecord]] = relationship(back_populates="job", cascade="all, delete-orphan")
+    report: Mapped[ReportRecord | None] = relationship(
+        back_populates="job", uselist=False, cascade="all, delete-orphan"
+    )
 
 
 class EvidenceRecord(Base):

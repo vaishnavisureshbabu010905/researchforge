@@ -8,20 +8,20 @@ external credentials while production deployments opt into real providers.
 from __future__ import annotations
 
 import os
-from enum import Enum
+from enum import StrEnum
 from functools import lru_cache
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-class SearchProviderName(str, Enum):
+class SearchProviderName(StrEnum):
     MOCK = "mock"
     LINKUP = "linkup"
     BRIGHTDATA = "brightdata"
 
 
-class LLMProviderName(str, Enum):
+class LLMProviderName(StrEnum):
     MOCK = "mock"
     ANTHROPIC = "anthropic"
     OPENAI = "openai"

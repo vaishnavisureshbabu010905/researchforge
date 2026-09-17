@@ -7,7 +7,16 @@ from researchforge.models.research import ResearchPlan, ResearchTask
 from researchforge.models.sources import ResearchDomain
 
 _DOMAIN_KEYWORDS = {
-    ResearchDomain.TECHNICAL: ("implement", "architecture", "code", "library", "framework", "benchmark", "api", "agent"),
+    ResearchDomain.TECHNICAL: (
+        "implement",
+        "architecture",
+        "code",
+        "library",
+        "framework",
+        "benchmark",
+        "api",
+        "agent",
+    ),
     ResearchDomain.ACADEMIC: ("research", "study", "theory", "evidence", "scientific", "paper", "mechanism"),
 }
 
@@ -48,11 +57,11 @@ class PlannerAgent(BaseAgent):
             domains.add(domain)
             tasks.append(ResearchTask(subquestion=sq, domain=domain, priority=0.7))
 
-        return draft.model_copy(update={"objective": draft.objective, "tasks": tasks, "required_domains": list(domains)})
+        return draft.model_copy(
+            update={"objective": draft.objective, "tasks": tasks, "required_domains": list(domains)}
+        )
 
-    async def plan_followup(
-        self, query: str, gaps: list[str], *, max_tasks: int, iteration: int
-    ) -> list[ResearchTask]:
+    async def plan_followup(self, query: str, gaps: list[str], *, max_tasks: int, iteration: int) -> list[ResearchTask]:
         """Build follow-up tasks directly from identified gaps — no LLM call needed since the
         gaps themselves (unsupported claims / missing coverage) are already concrete questions.
         """

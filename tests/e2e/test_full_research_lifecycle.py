@@ -12,6 +12,7 @@ import pytest
 @pytest.mark.asyncio
 async def test_full_research_lifecycle_via_api():
     import httpx
+
     from researchforge.api.app import create_app
 
     app = create_app()

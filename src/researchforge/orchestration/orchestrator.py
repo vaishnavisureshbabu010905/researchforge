@@ -142,7 +142,11 @@ class Orchestrator:
             state.set_status(final_status)
             job.completed_at = report.generated_at
             event_type = "research_partial" if final_status == ResearchJobStatus.PARTIAL else "research_completed"
-            message = "Research completed with partial task failures" if final_status == ResearchJobStatus.PARTIAL else "Research completed"
+            message = (
+                "Research completed with partial task failures"
+                if final_status == ResearchJobStatus.PARTIAL
+                else "Research completed"
+            )
             state.emit(event_type, message, quality=report.quality.overall)
             await self._save_checkpoint(state)
 
@@ -155,9 +159,7 @@ class Orchestrator:
 
         return state
 
-    async def _research_tasks(
-        self, state: ResearchState, tasks: list[ResearchTask], mode_config
-    ) -> list[Evidence]:
+    async def _research_tasks(self, state: ResearchState, tasks: list[ResearchTask], mode_config) -> list[Evidence]:
         from researchforge.models.research import TaskStatus
 
         items = []
@@ -166,7 +168,12 @@ class Orchestrator:
             state.emit("task_started", task.subquestion, task_id=task.task_id, domain=task.domain.value)
             agent = self._researcher_for(task.domain)
             items.append(
-                (task.task_id, lambda t=task, a=agent: a.research(t.subquestion, task_id=t.task_id, min_results=mode_config.min_evidence_per_task))
+                (
+                    task.task_id,
+                    lambda t=task, a=agent: a.research(
+                        t.subquestion, task_id=t.task_id, min_results=mode_config.min_evidence_per_task
+                    ),
+                )
             )
 
         outcomes = await run_tasks(

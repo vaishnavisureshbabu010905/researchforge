@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import uuid
-from enum import Enum
+from enum import StrEnum
 
 from pydantic import BaseModel, Field
 
@@ -12,14 +12,14 @@ def _new_id(prefix: str) -> str:
     return f"{prefix}_{uuid.uuid4().hex[:12]}"
 
 
-class ClaimStatus(str, Enum):
+class ClaimStatus(StrEnum):
     SUPPORTED = "supported"
     PARTIALLY_SUPPORTED = "partially_supported"
     CONFLICTING = "conflicting"
     UNSUPPORTED = "unsupported"
 
 
-class ClaimKind(str, Enum):
+class ClaimKind(StrEnum):
     """Distinguishes factual claims from inference/opinion/recommendation.
 
     Only FACT claims go through verification against evidence; the others are
@@ -57,5 +57,5 @@ class Claim(BaseModel):
         for eid in self.supporting_evidence_ids:
             item = evidence_by_id.get(eid)
             if item is not None:
-                domains.add(getattr(item, "domain"))
+                domains.add(item.domain)
         return domains
