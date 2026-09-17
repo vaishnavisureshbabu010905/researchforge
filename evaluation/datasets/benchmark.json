@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "description": "Small labeled benchmark for ResearchForge. Categories match docs/EVALUATION.md. Every question is designed to run fully offline against the mock providers.",
+  "questions": [
+    {
+      "id": "tech-comparison-1",
+      "category": "technology_comparison",
+      "query": "Compare the current approaches to building AI coding agents, including tool-use patterns and memory strategies.",
+      "mode": "deep",
+      "expected_domains": ["technical", "web"],
+      "min_quality": 40
+    },
+    {
+      "id": "product-comparison-1",
+      "category": "product_comparison",
+      "query": "Compare vector databases for retrieval-augmented generation workloads.",
+      "mode": "quick",
+      "expected_domains": ["technical"],
+      "min_quality": 35
+    },
+    {
+      "id": "scientific-1",
+      "category": "scientific_question",
+      "query": "What does current research say about the mechanisms behind CRISPR gene editing off-target effects?",
+      "mode": "deep",
+      "expected_domains": ["academic"],
+      "min_quality": 40
+    },
+    {
+      "id": "historical-1",
+      "category": "historical_question",
+      "query": "What were the primary causes of the fall of the Western Roman Empire according to historians?",
+      "mode": "quick",
+      "expected_domains": ["web", "academic"],
+      "min_quality": 35
+    },
+    {
+      "id": "architecture-1",
+      "category": "software_architecture",
+      "query": "What are the trade-offs between event-driven and request-response architectures for microservices?",
+      "mode": "deep",
+      "expected_domains": ["technical"],
+      "min_quality": 40
+    },
+    {
+      "id": "current-events-1",
+      "category": "current_events_style",
+      "query": "Summarize recent developments in open-weight large language models and their benchmark performance.",
+      "mode": "exhaustive",
+      "expected_domains": ["technical", "academic", "web"],
+      "min_quality": 45
+    }
+  ]
+}

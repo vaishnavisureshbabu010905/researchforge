@@ -1,0 +1,38 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      RESEARCHFORGE_ENVIRONMENT: development
+      RESEARCHFORGE_SEARCH_PROVIDER: ${RESEARCHFORGE_SEARCH_PROVIDER:-mock}
+      RESEARCHFORGE_LLM_PROVIDER: ${RESEARCHFORGE_LLM_PROVIDER:-mock}
+      RESEARCHFORGE_LINKUP_API_KEY: ${RESEARCHFORGE_LINKUP_API_KEY:-}
+      RESEARCHFORGE_BRIGHTDATA_API_KEY: ${RESEARCHFORGE_BRIGHTDATA_API_KEY:-}
+      RESEARCHFORGE_ANTHROPIC_API_KEY: ${RESEARCHFORGE_ANTHROPIC_API_KEY:-}
+      RESEARCHFORGE_OPENAI_API_KEY: ${RESEARCHFORGE_OPENAI_API_KEY:-}
+      RESEARCHFORGE_DATABASE_URL: sqlite+aiosqlite:////data/researchforge.db
+      RESEARCHFORGE_CORS_ALLOWED_ORIGINS: '["http://localhost:3000"]'
+    volumes:
+      - researchforge-data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:8000
+    depends_on:
+      - backend
+
+volumes:
+  researchforge-data:

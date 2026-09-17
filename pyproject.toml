@@ -1,0 +1,63 @@
+[project]
+name = "researchforge"
+version = "0.1.0"
+description = "Multi-Agent Deep Research, Built for Evidence."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    "pydantic>=2.7",
+    "pydantic-settings>=2.3",
+    "sqlalchemy[asyncio]>=2.0",
+    "aiosqlite>=0.20",
+    "httpx>=0.27",
+    "mcp>=1.2,<2.0",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+# Vendor SDKs are optional: the app runs fully in mock mode without any of these.
+# Install only the ones matching the providers you actually configure.
+anthropic = ["anthropic>=0.34"]
+openai = ["openai>=1.40"]
+linkup = ["linkup-sdk>=0.2"]
+dev = [
+    "pytest>=8.2",
+    "pytest-asyncio>=0.23",
+    "pytest-cov>=5.0",
+    "ruff>=0.5",
+    "mypy>=1.10",
+]
+
+[project.scripts]
+researchforge-mcp = "researchforge.mcp.server:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/researchforge"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+addopts = "-q"
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.11"
+packages = ["researchforge"]
+ignore_missing_imports = true
+disallow_untyped_defs = false
+warn_unused_ignores = true

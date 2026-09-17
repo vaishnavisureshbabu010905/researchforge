@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  background-color: #0f1115;
+  color: #e7e9ee;
+}
+
+::selection {
+  background: #5b8cff55;
+}
+
+.card {
+  @apply rounded-xl border border-border bg-panel p-5;
+}
+
+.badge {
+  @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+}
